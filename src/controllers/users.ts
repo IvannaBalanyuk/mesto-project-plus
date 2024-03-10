@@ -61,20 +61,13 @@ export const updateUser = (req: ICustomRequest, res: Response, next: NextFunctio
   const { name, about } = req.body;
   const id = req.user && req.user._id;
 
-  User.findById(id)
-    .then((user) => {
-      if (!user) {
+  User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
+    .then((updatedUser) => {
+      if (!updatedUser) {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
       }
 
-      User.findByIdAndUpdate(id, { name, about }, { new: true, runValidators: true })
-        .then((updatedUser) => {
-          if (!updatedUser) {
-            throw new IncorrectDataError('Переданы некорректные данные при запросе на изменение данных пользователя');
-          }
-
-          return res.status(RequestStatuses.OK_SUCCESS).send({ data: updatedUser });
-        });
+      return res.status(RequestStatuses.OK_SUCCESS).send({ data: updatedUser });
     })
     .catch(next);
 };
@@ -83,20 +76,13 @@ export const updateUserAvatar = (req: ICustomRequest, res: Response, next: NextF
   const { avatar } = req.body;
   const id = req.user && req.user._id;
 
-  User.findById(id)
-    .then((user) => {
-      if (!user) {
+  User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
+    .then((updatedUser) => {
+      if (!updatedUser) {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
       }
 
-      User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
-        .then((updatedUser) => {
-          if (!updatedUser) {
-            throw new IncorrectDataError('Переданы некорректные данные при запросе на изменение аватара пользователя');
-          }
-
-          return res.status(RequestStatuses.OK_SUCCESS).send({ data: updatedUser });
-        });
+      return res.status(RequestStatuses.OK_SUCCESS).send({ data: updatedUser });
     })
     .catch(next);
 };

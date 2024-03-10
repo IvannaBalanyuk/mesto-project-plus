@@ -31,44 +31,55 @@ export const createCard = (req: ICustomRequest, res: Response, next: NextFunctio
 export const delCardById = (req: ICustomRequest, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
 
-  Card.findById(cardId)
-    .then((card) => {
-      if (!card) {
+  Card.findByIdAndDelete(cardId)
+    .then((deletedCard) => {
+      if (!deletedCard) {
         throw new NotFoundError('Карточка по указанному _id не найдена.');
       }
 
-      Card.findByIdAndDelete(cardId)
-        .then((deletedCard) => res.status(RequestStatuses.OK_SUCCESS).send({ data: deletedCard }));
+      res.status(RequestStatuses.OK_SUCCESS).send({ data: deletedCard });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof MongooseError.CastError) {
+        const customError = new IncorrectDataError('Переданы некорректные данные при запросе на удаление карточки');
+        return next(customError);
+      }
+      return next(err);
+    });
 };
 
-export const likeCard = async (req: ICustomRequest, res: Response, next: NextFunction) => {
-  try {
-    const { cardId } = req.params;
-    const userId = req.user && req.user._id;
+export const likeCard = (req: ICustomRequest, res: Response, next: NextFunction) => {
+  const { cardId } = req.params;
+  const userId = req.user && req.user._id;
 
-    return Card.findByIdAndUpdate(
-      cardId,
-      { $addToSet: { likes: userId } },
-      { new: true },
-    );
-  } catch (error) {
-    return next(error);
-  }
+  return Card.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: userId } },
+    { new: true },
+  )
+    .catch((err) => {
+      if (err instanceof MongooseError.CastError) {
+        const customError = new IncorrectDataError('Переданы некорректные данные при запросе на добавление лайка');
+        return next(customError);
+      }
+      return next(err);
+    });
 };
 
 export const dislikeCard = async (req: ICustomRequest, res: Response, next: NextFunction) => {
-  try {
-    const { cardId } = req.params;
-    const userId = req.user && req.user._id;
+  const { cardId } = req.params;
+  const userId = req.user && req.user._id;
 
-    return Card.findByIdAndUpdate(
-      cardId,
-      { $pull: { likes: userId } },
-      { new: true },
-    );
-  } catch (error) {
-    return next(error);
-  }
+  return Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: userId } },
+    { new: true },
+  )
+    .catch((err) => {
+      if (err instanceof MongooseError.CastError) {
+        const customError = new IncorrectDataError('Переданы некорректные данные при запросе на удаление лайка');
+        return next(customError);
+      }
+      return next(err);
+    });
 };

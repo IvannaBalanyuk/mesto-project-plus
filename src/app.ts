@@ -6,7 +6,7 @@ import express, {
 } from 'express';
 import mongoose from 'mongoose';
 import Router from './routes';
-import errorsController from './controllers/errors';
+import errorsController from './middlewares/errors';
 import fakeAuth from './middlewares/fakeAuth';
 import NotFoundError from './errors/404-not-found-error';
 
