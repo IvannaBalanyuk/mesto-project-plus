@@ -1,0 +1,11 @@
+enum RequestStatuses {
+  OK_SUCCESS = 200,
+  CREATED_SUCCESS = 201,
+  NOT_FOUND_ERROR = 404,
+  BAD_REQUEST_ERROR = 400,
+  INTERNAL_SERVER_ERROR = 500,
+  AUTH_ERROR = 401,
+  EMAIL_ERROR = 409,
+}
+
+export default RequestStatuses;
