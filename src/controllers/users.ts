@@ -69,7 +69,14 @@ export const updateUser = (req: ICustomRequest, res: Response, next: NextFunctio
 
       return res.status(RequestStatuses.OK_SUCCESS).send({ data: updatedUser });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof MongooseError.ValidationError) {
+        const customError = new IncorrectDataError('Переданы некорректные данные при запросе на изменение информации о пользователе');
+        return next(customError);
+      }
+
+      return next(err);
+    });
 };
 
 export const updateUserAvatar = (req: ICustomRequest, res: Response, next: NextFunction) => {
@@ -84,5 +91,12 @@ export const updateUserAvatar = (req: ICustomRequest, res: Response, next: NextF
 
       return res.status(RequestStatuses.OK_SUCCESS).send({ data: updatedUser });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof MongooseError.ValidationError) {
+        const customError = new IncorrectDataError('Переданы некорректные данные при запросе на изменение аватара пользователя');
+        return next(customError);
+      }
+
+      return next(err);
+    });
 };
