@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import Router from './routes';
 import errorsController from './middlewares/errors';
 import { createUser, login } from './controllers/users';
-import fakeAuth from './middlewares/fakeAuth';
+import fakeAuth from './middlewares/auth';
 import NotFoundError from './errors/404-not-found-error';
 
 const { PORT = 3000 } = process.env;
