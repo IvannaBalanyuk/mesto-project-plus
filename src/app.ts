@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import Router from './routes';
 import errorsController from './middlewares/errors';
 import { createUser, login } from './controllers/users';
-import fakeAuth from './middlewares/auth';
+import auth from './middlewares/auth';
 import NotFoundError from './errors/404-not-found-error';
 
 const { PORT = 3000 } = process.env;
@@ -21,7 +21,7 @@ mongoose.connect(`${uri}mestodb`);
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(fakeAuth);
+app.use(auth);
 
 app.post('/signin', login);
 app.post('/signup', createUser);

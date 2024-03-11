@@ -112,6 +112,20 @@ export const updateUserAvatar = (req: ICustomRequest, res: Response, next: NextF
     });
 };
 
+export const getCurrentUser = async (req: ICustomRequest, res: Response, next: NextFunction) => {
+  const id = req.user && req.user._id;
+
+  return User.findById(id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Не удалось определить текущего пользователя. Повторите авторизацию');
+      }
+
+      res.status(RequestStatuses.OK_SUCCESS).send({ data: user });
+    })
+    .catch(next);
+};
+
 export const login = (req: ICustomRequest, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
