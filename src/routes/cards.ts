@@ -7,7 +7,6 @@ import {
   likeCard,
   dislikeCard,
 } from '../controllers/cards';
-import { idRegEx } from '../utils/constants';
 
 const cardsRouter = Router();
 
@@ -22,19 +21,19 @@ cardsRouter.post('/cards', celebrate({
 
 cardsRouter.delete('/cards/:cardId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().regex(idRegEx).required(),
+    cardId: Joi.string().length(24).hex().required(),
   }),
 }), delCardById);
 
 cardsRouter.put('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().regex(idRegEx).required(),
+    cardId: Joi.string().length(24).hex().required(),
   }),
 }), likeCard);
 
 cardsRouter.delete('/cards/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().regex(idRegEx).required(),
+    cardId: Joi.string().length(24).hex().required(),
   }),
 }), dislikeCard);
 

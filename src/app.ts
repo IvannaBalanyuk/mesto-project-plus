@@ -16,8 +16,7 @@ import { requestLogger, errorLogger } from './middlewares/logger';
 import NotFoundError from './errors/404-not-found-error';
 import { urlRegEx } from './utils/constants';
 
-const { PORT = 3000 } = process.env;
-const uri = 'mongodb://127.0.0.1:27017/';
+const { PORT = 3000, URI = 'mongodb://127.0.0.1:27017/' } = process.env;
 
 const app = express();
 
@@ -26,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
 
-mongoose.connect(`${uri}mestodb`);
+mongoose.connect(`${URI}mestodb`);
 
 app.use(requestLogger);
 

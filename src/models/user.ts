@@ -34,6 +34,7 @@ const userSchema = new Schema<IUser>(
     email: {
       type: String,
       required: true,
+      unique: true,
       validate: {
         validator: (v: string) => validator.isEmail(v),
         message: 'Некорректный email',

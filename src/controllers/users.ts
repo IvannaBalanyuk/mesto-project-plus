@@ -168,7 +168,7 @@ export const login = (req: ICustomRequest, res: Response, next: NextFunction) =>
         .end();
     })
     .catch((err) => {
-      if (err instanceof MongooseError.CastError) {
+      if (err instanceof MongooseError.ValidationError) {
         const customError = new IncorrectDataError('Переданы некорректные данные при запросе авторизации');
         return next(customError);
       }

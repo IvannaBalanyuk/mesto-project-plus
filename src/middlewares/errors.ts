@@ -14,7 +14,7 @@ const errorsController = (
     .status(statusCode)
     .send({
       message: statusCode === RequestStatuses.INTERNAL_SERVER_ERROR
-        ? 'Ошибка по умолчанию'
+        ? 'На сервере произошла ошибка'
         : message,
     });
 };
