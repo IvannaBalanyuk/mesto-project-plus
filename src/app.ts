@@ -7,6 +7,7 @@ import express, {
 import mongoose from 'mongoose';
 import Router from './routes';
 import errorsController from './middlewares/errors';
+import { createUser, login } from './controllers/users';
 import fakeAuth from './middlewares/fakeAuth';
 import NotFoundError from './errors/404-not-found-error';
 
@@ -21,6 +22,9 @@ app.use(json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(fakeAuth);
+
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use('/', Router);
 
