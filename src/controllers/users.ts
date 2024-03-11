@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
 import { ICustomRequest } from '../utils/types';
-import RequestStatuses from '../utils/constants';
+import { RequestStatuses } from '../utils/constants';
 import NotFoundError from '../errors/404-not-found-error';
 import IncorrectDataError from '../errors/400-incorrect-data';
 import EmailError from '../errors/409-email-error';

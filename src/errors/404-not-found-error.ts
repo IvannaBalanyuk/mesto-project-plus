@@ -1,4 +1,4 @@
-import RequestStatuses from '../utils/constants';
+import { RequestStatuses } from '../utils/constants';
 
 export default class NotFoundError extends Error {
   statusCode: number;

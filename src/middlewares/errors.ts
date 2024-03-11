@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { ICustomError, ICustomRequest } from '../utils/types';
-import RequestStatuses from '../utils/constants';
+import { RequestStatuses } from '../utils/constants';
 
 const errorsController = (
   err: ICustomError,

@@ -1,4 +1,4 @@
-import RequestStatuses from '../utils/constants';
+import { RequestStatuses } from '../utils/constants';
 
 export default class IncorrectDataError extends Error {
   statusCode: number;

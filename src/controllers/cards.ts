@@ -5,7 +5,7 @@ import { ICustomRequest } from '../utils/types';
 import NotFoundError from '../errors/404-not-found-error';
 import IncorrectDataError from '../errors/400-incorrect-data';
 import AuthError from '../errors/401-auth-error';
-import RequestStatuses from '../utils/constants';
+import { RequestStatuses } from '../utils/constants';
 
 export const getCards = (req: ICustomRequest, res: Response, next: NextFunction) => {
   Card.find({})

@@ -1,4 +1,4 @@
-enum RequestStatuses {
+export enum RequestStatuses {
   OK_SUCCESS = 200,
   CREATED_SUCCESS = 201,
   NOT_FOUND_ERROR = 404,
@@ -12,5 +12,3 @@ enum RequestStatuses {
 export const urlRegEx = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
 
 export const idRegEx = /^[0-9a-fA-F]{24}$/;
-
-export default RequestStatuses;
