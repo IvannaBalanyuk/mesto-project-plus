@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { celebrate, Joi } from 'celebrate';
 import {
   getUsers,
   getUserById,
@@ -6,13 +7,31 @@ import {
   updateUserAvatar,
   getCurrentUser,
 } from '../controllers/users';
+import { urlRegEx, idRegEx } from '../utils/constants';
 
 const usersRouter = Router();
 
 usersRouter.get('/users', getUsers);
-usersRouter.get('/users:userId', getUserById);
-usersRouter.patch('/users/me', updateUser);
-usersRouter.patch('/users/me/avatar', updateUserAvatar);
+
+usersRouter.get('/users/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().regex(idRegEx).required(),
+  }),
+}), getUserById);
+
+usersRouter.patch('/users/me', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(200),
+  }),
+}), updateUser);
+
+usersRouter.patch('/users/me/avatar', celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().regex(urlRegEx).required(),
+  }),
+}), updateUserAvatar);
+
 usersRouter.get('/users/me', getCurrentUser);
 
 export default usersRouter;

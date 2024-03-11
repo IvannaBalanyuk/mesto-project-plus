@@ -64,6 +64,11 @@ export const createUser = (req: ICustomRequest, res: Response, next: NextFunctio
         return next(customError);
       }
 
+      if (err instanceof MongoError) {
+        const customError = new EmailError('Пользователь с таким email уже существует');
+        return next(customError);
+      }
+
       return next(err);
     });
 };
@@ -123,7 +128,14 @@ export const getCurrentUser = async (req: ICustomRequest, res: Response, next: N
 
       res.status(RequestStatuses.OK_SUCCESS).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof MongooseError.CastError) {
+        const customError = new IncorrectDataError('Переданы некорректные данные при запросе информации о текущем пользователе');
+        return next(customError);
+      }
+
+      return next(err);
+    });
 };
 
 export const login = (req: ICustomRequest, res: Response, next: NextFunction) => {
@@ -147,7 +159,7 @@ export const login = (req: ICustomRequest, res: Response, next: NextFunction) =>
         });
     })
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'simple-secret-key', { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
@@ -155,5 +167,12 @@ export const login = (req: ICustomRequest, res: Response, next: NextFunction) =>
         })
         .end();
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof MongooseError.CastError) {
+        const customError = new IncorrectDataError('Переданы некорректные данные при запросе авторизации');
+        return next(customError);
+      }
+
+      return next(err);
+    });
 };
