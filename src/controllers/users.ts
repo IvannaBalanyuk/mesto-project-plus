@@ -111,3 +111,35 @@ export const updateUserAvatar = (req: ICustomRequest, res: Response, next: NextF
       return next(err);
     });
 };
+
+export const login = (req: ICustomRequest, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
+
+  User
+    .findOne({ email })
+    .select('+password')
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Введен непральный пароль или email');
+      }
+
+      return bcrypt.compare(password, user.password)
+        .then((matched: any) => {
+          if (!matched) {
+            throw new NotFoundError('Введен непральный пароль или email');
+          }
+
+          return user;
+        });
+    })
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+        })
+        .end();
+    })
+    .catch(next);
+};
