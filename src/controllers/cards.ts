@@ -4,6 +4,7 @@ import Card from '../models/card';
 import { ICustomRequest } from '../utils/types';
 import NotFoundError from '../errors/404-not-found-error';
 import IncorrectDataError from '../errors/400-incorrect-data';
+import AuthError from '../errors/401-auth-error';
 import RequestStatuses from '../utils/constants';
 
 export const getCards = (req: ICustomRequest, res: Response, next: NextFunction) => {
@@ -30,11 +31,16 @@ export const createCard = (req: ICustomRequest, res: Response, next: NextFunctio
 
 export const delCardById = (req: ICustomRequest, res: Response, next: NextFunction) => {
   const { cardId } = req.params;
+  const userId = req.user && req.user._id;
 
   Card.findByIdAndDelete(cardId)
     .then((deletedCard) => {
       if (!deletedCard) {
         throw new NotFoundError('Карточка по указанному _id не найдена.');
+      }
+
+      if (!(userId === deletedCard.owner.toString())) {
+        throw new AuthError('Допустимо удалять только свои карточки');
       }
 
       res.status(RequestStatuses.OK_SUCCESS).send({ data: deletedCard });
