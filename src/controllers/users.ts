@@ -1,10 +1,14 @@
 import { Response, NextFunction } from 'express';
 import { Error as MongooseError } from 'mongoose';
+import { MongoError } from 'mongodb';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import User from '../models/user';
 import { ICustomRequest } from '../utils/types';
 import RequestStatuses from '../utils/constants';
 import NotFoundError from '../errors/404-not-found-error';
 import IncorrectDataError from '../errors/400-incorrect-data';
+import EmailError from '../errors/409-email-error';
 
 export const getUsers = (req: ICustomRequest, res: Response, next: NextFunction) => {
   User.find({})
@@ -37,13 +41,20 @@ export const createUser = (req: ICustomRequest, res: Response, next: NextFunctio
     name,
     about,
     avatar,
+    email,
+    password,
   } = req.body;
 
-  User.create({
-    name,
-    about,
-    avatar,
-  })
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      });
+    })
     .then((user) => {
       res.status(RequestStatuses.CREATED_SUCCESS).send({ data: user });
     })

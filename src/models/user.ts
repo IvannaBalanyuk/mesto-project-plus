@@ -48,4 +48,6 @@ const userSchema = new Schema<IUser>(
   { versionKey: false },
 );
 
+userSchema.index({ email: 1 }, { unique: true });
+
 export default model<IUser>('user', userSchema);
