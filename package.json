@@ -8,7 +8,8 @@
     "build": "tsc",
     "dev": "ts-node-dev src/app.ts",
     "start": "ts-node src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-inspect": "ts-node-dev --debug --inspect -- src/app.ts"
   },
   "keywords": [],
   "author": "Balanyuk Ivanna",
@@ -23,6 +24,8 @@
     "@types/validator": "^13.11.9",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
+    "artillery": "^2.0.8",
+    "artillery-plugin-expect": "^2.3.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.2",

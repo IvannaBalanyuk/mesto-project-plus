@@ -1,0 +1,17 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 30
+      arrivalRate: 1
+      rampTo: 20
+      name: test1
+  plugins:
+    expect: {}
+scenarios:
+  - name: "My first test"
+    flow:
+      - get:
+          url: "/cards"
+          headers:
+            authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI2NjAyN2EyODU2Y2ZmNGFhMWE0OWFlMDkifQ.vgo09oLVduQFYVFVZQqCxCZNPjXs1ZyDJfZpetcNysQ"
+            cookie: "jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjAyN2EyODU2Y2ZmNGFhMWE0OWFlMDkiLCJpYXQiOjE3MTE0MzkxMTksImV4cCI6MTcxMjA0MzkxOX0._eYDfiUta5Hgg1ynw4AnJfduq8tiD_sJ2UzTW5HA-VY"

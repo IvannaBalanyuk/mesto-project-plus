@@ -33,17 +33,20 @@ export const delCardById = (req: ICustomRequest, res: Response, next: NextFuncti
   const { cardId } = req.params;
   const userId = req.user && req.user._id;
 
-  Card.findByIdAndDelete(cardId)
-    .then((deletedCard) => {
-      if (!deletedCard) {
+  Card.findById(cardId)
+    .then((card) => {
+      if (!card) {
         throw new NotFoundError('Карточка по указанному _id не найдена.');
       }
 
-      if (!(userId === deletedCard.owner.toString())) {
+      if (!(userId === card.owner.toString())) {
         throw new AuthError('Допустимо удалять только свои карточки');
       }
 
-      res.status(RequestStatuses.OK_SUCCESS).send({ data: deletedCard });
+      Card.findByIdAndDelete(cardId)
+        .then((deletedCard) => {
+          res.status(RequestStatuses.OK_SUCCESS).send({ data: deletedCard });
+        });
     })
     .catch((err) => {
       if (err instanceof MongooseError.CastError) {
@@ -58,11 +61,18 @@ export const likeCard = (req: ICustomRequest, res: Response, next: NextFunction)
   const { cardId } = req.params;
   const userId = req.user && req.user._id;
 
-  return Card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: userId } },
     { new: true },
   )
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка по указанному _id не найдена.');
+      }
+
+      res.status(RequestStatuses.OK_SUCCESS).send({ data: card });
+    })
     .catch((err) => {
       if (err instanceof MongooseError.CastError) {
         const customError = new IncorrectDataError('Переданы некорректные данные при запросе на добавление лайка');
@@ -76,11 +86,18 @@ export const dislikeCard = async (req: ICustomRequest, res: Response, next: Next
   const { cardId } = req.params;
   const userId = req.user && req.user._id;
 
-  return Card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: userId } },
     { new: true },
   )
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка по указанному _id не найдена.');
+      }
+
+      res.status(RequestStatuses.OK_SUCCESS).send({ data: card });
+    })
     .catch((err) => {
       if (err instanceof MongooseError.CastError) {
         const customError = new IncorrectDataError('Переданы некорректные данные при запросе на удаление лайка');

@@ -14,7 +14,7 @@ export default (req: ICustomRequest, res: Response, next: NextFunction) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-secret-key') as JwtPayload;
+    payload = jwt.verify(token, 'simple-secret-key') as JwtPayload;
   } catch (err) {
     throw new AuthError('Ошибка авторизации');
   }

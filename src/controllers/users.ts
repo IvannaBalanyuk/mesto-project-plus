@@ -1,6 +1,5 @@
 import { Response, NextFunction } from 'express';
 import { Error as MongooseError } from 'mongoose';
-import { MongoError } from 'mongodb';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
@@ -17,9 +16,9 @@ export const getUsers = (req: ICustomRequest, res: Response, next: NextFunction)
 };
 
 export const getUserById = (req: ICustomRequest, res: Response, next: NextFunction) => {
-  const id = Number(req.params.id);
+  const { userId } = req.params;
 
-  return User.findById(id)
+  return User.findById(userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден');
@@ -32,6 +31,7 @@ export const getUserById = (req: ICustomRequest, res: Response, next: NextFuncti
         const customError = new IncorrectDataError('Переданы некорректные данные при запросе информации о пользователе');
         return next(customError);
       }
+
       return next(err);
     });
 };
@@ -53,20 +53,25 @@ export const createUser = (req: ICustomRequest, res: Response, next: NextFunctio
         avatar,
         email,
         password: hash,
-      });
-    })
-    .then((user) => {
-      res.status(RequestStatuses.CREATED_SUCCESS).send({ data: user });
+      })
+        .then((user) => {
+          if (!user) {
+            throw new Error('При создании пользователя произошла ошибка');
+          }
+
+          res.status(RequestStatuses.CREATED_SUCCESS).send({ data: user });
+        })
+        .catch((err) => {
+          if (err.name === 'MongoServerError' && err.code === 11000) {
+            return next(new EmailError('Пользователь с таким email уже существует'));
+          }
+
+          return next(err);
+        });
     })
     .catch((err) => {
       if (err instanceof MongooseError.ValidationError) {
-        const customError = new IncorrectDataError('Переданы некорректные данные при запросе о регистрации пользователя');
-        return next(customError);
-      }
-
-      if (err instanceof MongoError) {
-        const customError = new EmailError('Пользователь с таким email уже существует');
-        return next(customError);
+        return next(new IncorrectDataError('Переданы некорректные данные при запросе о регистрации пользователя'));
       }
 
       return next(err);
@@ -146,13 +151,13 @@ export const login = (req: ICustomRequest, res: Response, next: NextFunction) =>
     .select('+password')
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Введен непральный пароль или email');
+        throw new NotFoundError('Введен неправильный пароль или email');
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched: any) => {
           if (!matched) {
-            throw new NotFoundError('Введен непральный пароль или email');
+            throw new NotFoundError('Введен неправильный пароль или email');
           }
 
           return user;

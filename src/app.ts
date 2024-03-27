@@ -14,9 +14,8 @@ import { createUser, login } from './controllers/users';
 import auth from './middlewares/auth';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import NotFoundError from './errors/404-not-found-error';
+import { PORT, URI } from './config';
 import { urlRegEx } from './utils/constants';
-
-const { PORT = 3000, URI = 'mongodb://127.0.0.1:27017/' } = process.env;
 
 const app = express();
 
@@ -50,14 +49,11 @@ app.use(auth);
 
 app.use('/', Router);
 
-app.use('*', (req: Request, res: Response, next: NextFunction) => {
-  const customError = new NotFoundError('Запрашиваемый ресурс не найден');
-  return next(customError);
-});
+app.use('*', (req: Request, res: Response, next: NextFunction) => next(new NotFoundError('Запрашиваемый ресурс не найден')));
 
 app.use(errorLogger);
-app.use(errors());
 app.use(errorsController);
+app.use(errors());
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

@@ -13,12 +13,6 @@ const usersRouter = Router();
 
 usersRouter.get('/users', getUsers);
 
-usersRouter.get('/users/:userId', celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
-  }),
-}), getUserById);
-
 usersRouter.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
@@ -33,5 +27,11 @@ usersRouter.patch('/users/me/avatar', celebrate({
 }), updateUserAvatar);
 
 usersRouter.get('/users/me', getCurrentUser);
+
+usersRouter.get('/users/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex().required(),
+  }),
+}), getUserById);
 
 export default usersRouter;
