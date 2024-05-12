@@ -29,7 +29,7 @@ mongoose.connect(`${URI}mestodb`);
 app.use(requestLogger);
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:PORT');
+  res.setHeader('Access-Control-Allow-Origin', 'http://mesto.domain.students.nomoredomainswork.ru');
   next();
 });
 
