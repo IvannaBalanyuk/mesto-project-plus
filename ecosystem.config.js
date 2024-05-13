@@ -7,7 +7,7 @@ const {
 module.exports = {
   apps: [{
     name: 'mesto-app',
-    script: './mesto-project-plus/dist/app.js',
+    script: 'dist/app.js',
   }],
 
   deploy: {
