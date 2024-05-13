@@ -5,7 +5,7 @@ import express, {
   NextFunction,
 } from 'express';
 import mongoose from 'mongoose';
-import cors from 'cors';
+// import cors from 'cors';
 import { celebrate, Joi, errors } from 'celebrate';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -20,15 +20,15 @@ import { urlRegEx } from './utils/constants';
 
 const app = express();
 
-const corsOptions: cors.CorsOptions = {
-  origin: 'http://mesto.domain.students.nomoredomainswork.ru',
-  credentials: true,
-  allowedHeaders: '*',
-  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  preflightContinue: false,
-};
+// const corsOptions: cors.CorsOptions = {
+//   origin: 'http://mesto.domain.students.nomoredomainswork.ru',
+//   credentials: true,
+//   allowedHeaders: '*',
+//   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+//   preflightContinue: false,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
@@ -59,7 +59,7 @@ app.use(auth);
 
 app.use('/', Router);
 
-app.options('*', cors(corsOptions));
+// app.options('*', cors(corsOptions));
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => next(new NotFoundError('Запрашиваемый ресурс не найден')));
 
