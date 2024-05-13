@@ -22,7 +22,6 @@ const app = express();
 
 const corsOptions = {
   origin: 'http://mesto.domain.students.nomoredomainswork.ru/',
-  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
