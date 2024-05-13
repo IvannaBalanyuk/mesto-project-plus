@@ -1,8 +1,8 @@
 {
   "name": "mesto-project-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "mesto-project-backend",
+  "main": "dist/app.js",
   "scripts": {
     "lint": "npx eslint src/**/*.ts",
     "build": "tsc",
@@ -46,6 +46,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.4.0",
     "mongoose": "^8.2.1",
+    "pm2": "^5.3.1",
     "validator": "^13.11.0",
     "winston": "^3.12.0"
   }
