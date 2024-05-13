@@ -7,6 +7,10 @@ import AuthError from '../errors/401-auth-error';
 export default (req: ICustomRequest, res: Response, next: NextFunction) => {
   const token = req.cookies.jwt;
 
+  if (req.method === 'OPTIONS') {
+    next();
+  }
+
   if (!token) {
     throw new AuthError('Ошибка авторизации');
   }
