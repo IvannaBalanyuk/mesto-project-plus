@@ -5,6 +5,7 @@ import express, {
   NextFunction,
 } from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import { celebrate, Joi, errors } from 'celebrate';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -19,6 +20,13 @@ import { urlRegEx } from './utils/constants';
 
 const app = express();
 
+const corsOptions = {
+  origin: 'http://mesto.domain.students.nomoredomainswork.ru/',
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -27,23 +35,6 @@ app.use(helmet());
 mongoose.connect(`${URI}mestodb`);
 
 app.use(requestLogger);
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://mesto.domain.students.nomoredomainswork.ru');
-  res.setHeader('Access-Control-Allow-Headers', [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'Credentials',
-    'Authorization',
-    'Cookie',
-  ]);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('OptionsSuccessStatus', 200);
-  next();
-});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
