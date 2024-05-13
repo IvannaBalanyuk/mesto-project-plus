@@ -20,13 +20,13 @@ import { urlRegEx } from './utils/constants';
 
 const app = express();
 
-const corsOptions = {
-  origin: 'http://mesto.domain.students.nomoredomainswork.ru',
-  optionsSuccessStatus: 200,
-};
+// const corsOptions = {
+//   origin: 'http://mesto.domain.students.nomoredomainswork.ru',
+//   optionsSuccessStatus: 200,
+// };
 
-app.options('*', cors(corsOptions));
-app.use(cors(corsOptions));
+app.options('*', cors());
+app.use(cors());
 
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
