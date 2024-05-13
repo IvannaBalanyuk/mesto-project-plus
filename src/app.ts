@@ -41,6 +41,7 @@ app.use((req, res, next) => {
   ]);
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('OptionsSuccessStatus', 200);
   next();
 });
 
