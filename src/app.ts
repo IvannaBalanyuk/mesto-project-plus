@@ -20,13 +20,15 @@ import { urlRegEx } from './utils/constants';
 
 const app = express();
 
-// const corsOptions = {
-//   origin: 'http://mesto.domain.students.nomoredomainswork.ru',
-//   optionsSuccessStatus: 200,
-// };
+const corsOptions: cors.CorsOptions = {
+  origin: 'http://mesto.domain.students.nomoredomainswork.ru',
+  credentials: true,
+  allowedHeaders: '*',
+  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+};
 
-app.options('*', cors());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,7 +36,6 @@ app.use(cookieParser());
 app.use(helmet());
 
 mongoose.connect(`${URI}mestodb`);
-
 app.use(requestLogger);
 
 app.post('/signin', celebrate({
@@ -57,6 +58,8 @@ app.post('/signup', celebrate({
 app.use(auth);
 
 app.use('/', Router);
+
+app.options('*', cors(corsOptions));
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => next(new NotFoundError('Запрашиваемый ресурс не найден')));
 
