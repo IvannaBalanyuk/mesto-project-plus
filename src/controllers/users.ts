@@ -8,6 +8,12 @@ import { RequestStatuses } from '../utils/constants';
 import NotFoundError from '../errors/404-not-found-error';
 import IncorrectDataError from '../errors/400-incorrect-data';
 import EmailError from '../errors/409-email-error';
+import { JWT_SECRET } from '../config';
+
+let key = 'simple-secret-key';
+if (JWT_SECRET) {
+  key = JWT_SECRET;
+}
 
 export const getUsers = (req: ICustomRequest, res: Response, next: NextFunction) => {
   User.find({})
@@ -164,7 +170,7 @@ export const login = (req: ICustomRequest, res: Response, next: NextFunction) =>
         });
     })
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'simple-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, key, { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
