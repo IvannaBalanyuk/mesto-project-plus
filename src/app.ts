@@ -14,7 +14,7 @@ import { createUser, login } from './controllers/users';
 import auth from './middlewares/auth';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import NotFoundError from './errors/404-not-found-error';
-import { PORT, URI } from './config';
+import { PORT, DATABASE_URI } from './config';
 import { urlRegEx } from './utils/constants';
 
 const app = express();
@@ -24,9 +24,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
 
-mongoose.connect(`${URI}mestodb`);
+mongoose.connect(`${DATABASE_URI}mestodb`);
 
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://mesto.domain.students.nomoredomainswork.ru');
